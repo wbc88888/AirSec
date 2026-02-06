@@ -33,7 +33,7 @@ Extracting spatiotemporal features from CSI and sound and obtaining potential ca
 
 4. Run `候选者猜测.py`
 
-   ​        `Matching possible sequences with and without waveform overlap. `When there is no waveform overlap, search for possible sequences by matching the spatiotemporal feature list normally. `When there is waveform overlap, it is necessary to consider the situation of waveform overlap when matching spatial features. First, match the temporal features, search for possible numerical sequences, and then separate the overlapping and non overlapping parts of the waveform. Calculate whether the spatial features of the non overlapping parts match one by one. At the same time, if the numerical difference in the overlapping parts of the waveform is less than or equal to 1, both parts must match before being added to the candidate list.
+   ​        Matching possible sequences with and without waveform overlap. When there is no waveform overlap, search for possible sequences by matching the spatiotemporal feature list normally. When there is waveform overlap, it is necessary to consider the situation of waveform overlap when matching spatial features. First, match the temporal features, search for possible numerical sequences, and then separate the overlapping and non overlapping parts of the waveform. Calculate whether the spatial features of the non overlapping parts match one by one. At the same time, if the numerical difference in the overlapping parts of the waveform is less than or equal to 1, both parts must match before being added to the candidate list.
 
 ## else
 
