@@ -9,19 +9,18 @@ from sklearn.decomposition import PCA
 from sklearn.impute import SimpleImputer
 from scipy.interpolate import CubicSpline
 
-sys.path.append('D:\\MyD\\My cybersecurity\\研一\\W\\attack\\csitool')
+sys.path.append('attack\\csitool')
 import csitools
 from csitool.passband import lowpass
 from csitool.read_pcap import NEXBeamformReader
 
 # -------------------- 常量配置 --------------------
 USE_BUTTERWORTH = True  # 是否使用巴特沃斯滤波
-USE_PCA = True  # False 时使用 MRC
-N_COMPONENTS = 2  # PCA中保留主成分个数
+USE_PCA = True          # False 时使用 MRC
+N_COMPONENTS = 2        # PCA中保留主成分个数
 DATA_PATH_RAW = 'data/1-111000/'
 DATA_PATH_OUTPUT = 'intermediate variable/1-111000/'
 PCAP_FILENAME = 'capture.pcap'
-
 
 
 def validate_csi_shape(csi):
@@ -167,3 +166,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
