@@ -3,16 +3,17 @@ import sys
 import logging
 from typing import Tuple
 import numpy as np
-
 import librosa
 import noisereduce as nr
 import soundfile as sf
+
 
 # 配置日志输出格式
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
+
 
 def load_audio(file_path: str) -> Tuple[np.ndarray, int]:  # type: ignore
     """
@@ -148,3 +149,4 @@ if __name__ == '__main__':
     else:
         DATA_DIR = 'data/1-111000/'
     main(DATA_DIR)
+
