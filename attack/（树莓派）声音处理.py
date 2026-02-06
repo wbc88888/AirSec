@@ -4,9 +4,9 @@ import numpy as np
 from sklearn.cluster import KMeans
 import matplotlib
 import matplotlib.pyplot as plt
-# 指定中文字体
-matplotlib.rcParams['font.sans-serif'] = ['Microsoft YaHei']  # 微软雅黑
-matplotlib.rcParams['axes.unicode_minus'] = False  # 使负号正常显示
+
+matplotlib.rcParams['font.sans-serif'] = ['Microsoft YaHei']
+matplotlib.rcParams['axes.unicode_minus'] = False
 
 
 # —————————————— 配置常量 ——————————————
@@ -99,9 +99,6 @@ if __name__ == "__main__":
     kmeans.fit(data)
     centers = np.sort(kmeans.cluster_centers_.flatten())
 
-    # 修改微调
-    # centers = np.array([197.5,340.59090909,443,633.72222222,741.1,968.5])
-
     for i in range(5):
         print(centers[i+1]-centers[i])
 
@@ -128,3 +125,4 @@ if __name__ == "__main__":
     output_path = os.path.join(out_dir, 'times(sound).npy')
     np.save(output_path, times[:6])
     print(f"已保存检测结果到：{output_path}")
+
