@@ -36,10 +36,10 @@ def preprocess_csi(csi_matrix):
     if np.all(np.isnan(csi_first)):
         raise ValueError("CSI矩阵全为NaN，无法处理")
 
-    imputer = SimpleImputer(missing_values=np.nan, strategy='mean')  # 用列的平均填充
+    imputer = SimpleImputer(missing_values=np.nan, strategy='mean')
     csi_imputed = imputer.fit_transform(csi_first)
 
-    csi_squeezed = np.squeeze(csi_imputed).T  # 转置为 (子载波, 时间戳)
+    csi_squeezed = np.squeeze(csi_imputed).T
     return csi_squeezed
 
 
@@ -158,5 +158,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
