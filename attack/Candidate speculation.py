@@ -4,7 +4,7 @@ import logging
 import numpy as np
 import pandas as pd
 
-# 配置日志
+
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
@@ -42,9 +42,7 @@ D_jiugong = np.array([
 ])
 
 def load_table(csv_path: str) -> pd.DataFrame:
-    """
-    加载 CSV 候选表格，必须包含列 'PIN', 'Spatial', 'Temporal'。
-    """
+
     if not os.path.isfile(csv_path):
         logger.error(f"未找到表格文件: {csv_path}")
         sys.exit(1)
@@ -66,7 +64,6 @@ def make_pro_tprop(prop, idx):
     new_prop = prop[0:idx] + '-' + prop[idx+1:L]
 
     known_indices = []
-    # 记录已知数字位置
     for idx, val in enumerate(new_prop):
         if val != 'x' and val != 'y' and val != 'z' and val != '-':
             known_indices.append(idx)
@@ -89,7 +86,6 @@ def make_pro_sprop(prop, idx):
     new_prop = prop[0:idx] + '-' + prop[idx+1:L]
 
     known_indices = []
-    # 记录已知数字位置
     for idx, val in enumerate(new_prop):
         if val != 'x' and val != 'y' and val != 'z' and val != '-':
             known_indices.append(idx)
@@ -187,7 +183,6 @@ def filter_candidates_sprop(pro_sprop_list, cand_tprop, table_df):
             glue_ = False
             unknown_indices = []
             glue_indices = []
-            # 先检查sprop状况
             for i, val in enumerate(pro_sprop):
                 if val == 'x' or val == 'y' or val == 'z':
                     glue_ = True
@@ -196,15 +191,12 @@ def filter_candidates_sprop(pro_sprop_list, cand_tprop, table_df):
                 elif val == '-':
                     unknown_indices.append(i)
 
-            # 无xyz情况下同时间特征处理
             if glue_ == False:
                 pro_text_list = make_pro_sprop_list(text, XS)
                 if pro_sprop in pro_text_list:
                     candidates.append(idx)
                     break
-            # 有xyz情况下
             else:
-                # 仅粘合位置需要数字相连约束
                 ok = True
                 idx_str = f'{idx:06d}'
                 for i in glue_indices:
@@ -222,11 +214,9 @@ def filter_candidates_sprop(pro_sprop_list, cand_tprop, table_df):
                 if not ok:
                     break
 
-                # 拼接已知位置字符
                 known_chars = ''.join(c for i, c in enumerate(idx_str) if i not in unknown_indices)
                 known_sprop = ''.join(c for i, c in enumerate(pro_sprop) if i not in unknown_indices)
 
-                # 生成实际空间编码
                 labels = []
                 mapping = {}
                 next_label = 1
@@ -245,13 +235,13 @@ def filter_candidates_sprop(pro_sprop_list, cand_tprop, table_df):
 
 
 def main():
-    table_df = load_table(TABLE_PATH)  # 加载表格
+    table_df = load_table(TABLE_PATH)
 
-    pro_sprop_list, pro_tprop_list = make_pro_prop_list(S, T, XS, XT)  # 返回可能时空特征值列表
+    pro_sprop_list, pro_tprop_list = make_pro_prop_list(S, T, XS, XT)
 
-    cand_tprop = filter_candidates_tprop(pro_tprop_list, table_df)  # 先由时间特征筛选一批
+    cand_tprop = filter_candidates_tprop(pro_tprop_list, table_df)
 
-    candidates = filter_candidates_sprop(pro_sprop_list, cand_tprop, table_df)  # 再有空间特征筛选一批
+    candidates = filter_candidates_sprop(pro_sprop_list, cand_tprop, table_df)
 
     print(candidates)
 
