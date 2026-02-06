@@ -9,8 +9,8 @@ DATA_PATH = 'intermediate variable/1-111000/'
 WAVE_THRESHOLD = 1.4    # DTW 距离阈值
 FLIGHT_THRESHOLD = 0.1  # 飞行间隔阈值
 
-# --------------------- 辅助函数 ---------------------
 
+# --------------------- 辅助函数 ---------------------
 def load_numpy_array(path: str, name: str) -> np.ndarray:
     """
     从指定路径加载 .npy 文件，确保文件存在和数据正确
@@ -82,8 +82,8 @@ def save_array(path: str, name: str, arr: np.ndarray):
     full_path = os.path.join(path, name)
     np.save(full_path, arr)
 
-# --------------------- 主流程 ---------------------
 
+# --------------------- 主流程 ---------------------
 # 1. 载入数据并校验
 waveforms = load_numpy_array(DATA_PATH, 'waveforms.npy')
 intervals = load_numpy_array(DATA_PATH, 'intervals.npy')
@@ -99,9 +99,6 @@ print('时间特征矩阵：\n', T)
 # 3. 提取空间特征
 n_wave = len(waveforms)
 s_vector = np.full(n_wave, -1, dtype=int)
-
-# 容错标记示例
-# s_vector[2] = -2
 
 cur_class = 0
 cur_class2 = 10
@@ -171,10 +168,10 @@ ft_vector = sorted_idx[np.array(t_vector) - 1]
 print("原时间特征：", ft_vector)
 
 # 6. 根据粘合情况调整时间特征
-# for i in range(cur_class2 - 10):
-#     idx_min = np.abs(s_vector - 11 - i).argmin()
-#     offset = ft_vector[idx_min] - 1
-#     ft_vector = np.where(ft_vector <= ft_vector[idx_min], 1, ft_vector - offset)
+for i in range(cur_class2 - 10):
+    idx_min = np.abs(s_vector - 11 - i).argmin()
+    offset = ft_vector[idx_min] - 1
+    ft_vector = np.where(ft_vector <= ft_vector[idx_min], 1, ft_vector - offset)
 
 # 7. 输出与保存
 print("空间特征：", s_vector)
@@ -182,3 +179,4 @@ print("时间特征：", ft_vector)
 
 save_array(DATA_PATH, 'sprop.npy', s_vector)
 save_array(DATA_PATH, 'tprop.npy', ft_vector)  # 保存时间属性
+
