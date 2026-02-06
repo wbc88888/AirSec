@@ -5,8 +5,8 @@ from sklearn.preprocessing import MinMaxScaler
 import random
 
 DATA_PATH = 'intermediate variable/1-111000/'
-WAVE_THRESHOLD = 1.4    # DTW 距离阈值
-FLIGHT_THRESHOLD = 0.1  # 飞行间隔阈值
+WAVE_THRESHOLD = 1.4
+FLIGHT_THRESHOLD = 0.1 
 
 def load_numpy_array(path: str, name: str) -> np.ndarray:
 
@@ -138,8 +138,6 @@ g_means = [intervals[t_vector == g].mean() for g in unique_groups]
 sorted_idx = np.argsort(np.argsort(np.array(g_means))) + 1
 ft_vector = sorted_idx[np.array(t_vector) - 1]
 
-print("原时间特征：", ft_vector)
-
 for i in range(cur_class2 - 10):
     idx_min = np.abs(s_vector - 11 - i).argmin()
     offset = ft_vector[idx_min] - 1
@@ -150,5 +148,6 @@ print("时间特征：", ft_vector)
 
 save_array(DATA_PATH, 'sprop.npy', s_vector)
 save_array(DATA_PATH, 'tprop.npy', ft_vector)  # 保存时间属性
+
 
 
