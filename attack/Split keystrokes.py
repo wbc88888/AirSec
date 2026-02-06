@@ -18,7 +18,6 @@ BG_MARGIN = 1.0
 MASK = 0
 
 
-# ———— 工具函数 ————
 def load_numpy_array(file_path: Path) -> np.ndarray:
     if not file_path.is_file():
         raise FileNotFoundError(f"未找到文件: {file_path}")
@@ -110,7 +109,7 @@ def main():
     plt.grid(True)
     plt.tight_layout()
     plt.show(block=False)
-    plt.waitforbuttonpress()  # 回车 / 鼠标点击 都会继续
+    plt.waitforbuttonpress()
     plt.close()
 
     if USE_ENERGY:
@@ -140,7 +139,7 @@ def main():
     print("终点：", end_pts)
 
     waveforms = [csi[s:e] for s, e in zip(start_pts, end_pts)]
-    intervals = list(np.diff(sound_times))  # 基于原声音时间戳的中心间隔
+    intervals = list(np.diff(sound_times))
 
     print(f"击键波形数量: {len(waveforms)}")
     print("间隔 (s):", intervals)
@@ -176,5 +175,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
