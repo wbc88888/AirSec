@@ -3,19 +3,21 @@ from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 # ———— 常量配置 ————
 DATA_DIR = Path('intermediate variable/1-111000')
 CSI_FILE = 'csi.npy'
 TS_FILE = 'time_stamps.npy'
 SOUND_TS_FILE = 'times(sound).npy'
 
-CSI_FIRST_TS = 0.3
-SOUND_FIRST_TS = 0.0
+CSI_FIRST_TS = 0.30035
+SOUND_FIRST_TS = 0.00014
 WINDOW_SIZE = 17          # 窗口大小
 USE_ENERGY = True         # False 时计算 MAD  True 时计算能量
 THRESHOLD_FACTOR = 0.015  # 用于背景阈值计算
 BG_MARGIN = 1.0           # 背景阈值窗口大小
 MASK = 0                  # 背景阈值是否限定窗口
+
 
 # ———— 工具函数 ————
 def load_numpy_array(file_path: Path) -> np.ndarray:
@@ -99,6 +101,7 @@ def segment_waveforms(
         ends.append(e)
 
     return starts, ends
+
 
 # ———— 主流程 ————
 def main():
@@ -198,3 +201,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
