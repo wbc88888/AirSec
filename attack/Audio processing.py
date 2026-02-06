@@ -21,7 +21,6 @@ PERCENTILE_THRESHOLD = 96
 N_CLUSTERS = 6          
 RANDOM_STATE = 42      
 
-# —————————————— 辅助函数 ——————————————
 def load_audio(path: str):
     if not os.path.isfile(path):
         raise FileNotFoundError(f"未找到音频文件：{path}")
@@ -111,5 +110,6 @@ if __name__ == "__main__":
     output_path = os.path.join(out_dir, 'times(sound).npy')
     np.save(output_path, times[:6])
     print(f"已保存检测结果到：{output_path}")
+
 
 
