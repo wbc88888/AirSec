@@ -14,10 +14,9 @@ import csitools
 from csitool.passband import lowpass
 from csitool.read_pcap import NEXBeamformReader
 
-# -------------------- 常量配置 --------------------
-USE_BUTTERWORTH = True  # 是否使用巴特沃斯滤波
-USE_PCA = True          # False 时使用 MRC
-N_COMPONENTS = 2        # PCA中保留主成分个数
+USE_BUTTERWORTH = True 
+USE_PCA = True 
+N_COMPONENTS = 2  
 DATA_PATH_RAW = 'data/1-111000/'
 DATA_PATH_OUTPUT = 'intermediate variable/1-111000/'
 PCAP_FILENAME = 'capture.pcap'
@@ -31,9 +30,7 @@ def validate_csi_shape(csi):
 
 
 def preprocess_csi(csi_matrix):
-    """
-    选取第一个收发天线数据，处理NaN并转置为 (子载波数, 帧数)
-    """
+
     csi_first = csi_matrix[:, :, 0, 0]
     csi_first[csi_first == -np.inf] = np.nan
     if np.all(np.isnan(csi_first)):
@@ -47,7 +44,7 @@ def preprocess_csi(csi_matrix):
 
 
 def trim_to_10_seconds(timestamps, csi_data):
-    """裁剪到前10秒"""
+
     timestamps = timestamps - timestamps[0]
     ten_index = np.argmax(timestamps > 10)
     if ten_index == 0:
@@ -57,7 +54,7 @@ def trim_to_10_seconds(timestamps, csi_data):
 
 
 def interpolate_csi(csi_data, timestamps):
-    """对每个子载波进行样条插值"""
+
     new_timestamps = np.linspace(0, timestamps[-1], len(timestamps))
     for i in range(csi_data.shape[0]):
         cs = CubicSpline(timestamps, csi_data[i])
@@ -66,7 +63,7 @@ def interpolate_csi(csi_data, timestamps):
 
 
 def apply_butterworth_filter(csi_data, timestamps):
-    """对 CSI 数据进行低通滤波"""
+
     fs = int(len(timestamps) / 10)
     for i in range(csi_data.shape[0]):
         csi_data[i] = lowpass(csi_data[i], 3, fs, 5)
@@ -74,7 +71,7 @@ def apply_butterworth_filter(csi_data, timestamps):
 
 
 def apply_pca(csi_data, n_components):
-    """使用PCA降维并水平归零"""
+
     pca = PCA(n_components=8)
     transformed = pca.fit_transform(csi_data.T).T
     print("各主成分的方差贡献率:", pca.explained_variance_ratio_)
@@ -87,7 +84,7 @@ def apply_pca(csi_data, n_components):
 
 
 def apply_mrc(csi_data):
-    """使用最大比合并（MRC）方式提取信道信息"""
+
     csi_conj = np.conj(csi_data)
     epsilon = 1e-3
     weights = csi_conj / (np.sum(csi_conj, axis=0, keepdims=True) + epsilon)
@@ -104,7 +101,7 @@ def plot_csi(time_axis, values, title='TIME-CSI'):
     plt.legend()
     plt.grid(True)
     plt.show(block=False)
-    plt.waitforbuttonpress()  # 回车 / 鼠标点击 都会继续
+    plt.waitforbuttonpress() 
     plt.close()
 
 
@@ -115,12 +112,12 @@ def save_outputs(csi_values, timestamps, path):
 
 
 def ensure_dir_exists(dir_path: str):
-    """若目录不存在则创建之。"""
+
     os.makedirs(dir_path, exist_ok=True)
 
 
 def main():
-    # ----------- Step 1: 读取CSI数据 ------------
+
     pcap_path = os.path.join(DATA_PATH_RAW, PCAP_FILENAME)
     if not os.path.exists(pcap_path):
         raise FileNotFoundError(f"未找到PCAP文件：{pcap_path}")
@@ -135,7 +132,6 @@ def main():
     validate_csi_shape(csi_matrix)
     csi_processed = preprocess_csi(csi_matrix)
 
-    # ----------- Step 2: 时间戳处理 ------------
     timestamps = csi_data.timestamps
     timestamps_trimmed, csi_trimmed, ten_index = trim_to_10_seconds(timestamps, csi_processed)
 
@@ -143,22 +139,18 @@ def main():
     print("前10s时间戳矩阵形状:", timestamps_trimmed.shape)
     print("10s索引位置:", ten_index)
 
-    # ----------- Step 3: 样条插值 ------------
     csi_interpolated, uniform_timestamps = interpolate_csi(csi_trimmed, timestamps_trimmed)
 
-    # ----------- Step 4: 滤波处理 ------------
     if USE_BUTTERWORTH:
         csi_filtered = apply_butterworth_filter(csi_interpolated, uniform_timestamps)
     else:
         csi_filtered = csi_interpolated
 
-    # ----------- Step 5: 特征提取 ------------
     if USE_PCA:
         csi_final = apply_pca(csi_filtered, N_COMPONENTS)
     else:
         csi_final = apply_mrc(csi_filtered)
 
-    # ----------- Step 6: 可视化与保存 ------------
     plot_csi(uniform_timestamps, csi_final)
     ensure_dir_exists(DATA_PATH_OUTPUT)
     save_outputs(csi_final, uniform_timestamps, DATA_PATH_OUTPUT)
@@ -166,4 +158,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
